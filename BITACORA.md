@@ -1,0 +1,1 @@
+24/9 Encontre problemas al intentar crear el venv 
