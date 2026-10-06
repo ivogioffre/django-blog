@@ -1,34 +1,128 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block page_title %}
-    <h2>{{ post.title }}</h2>
-{% endblock page_title %}
+{% block title %}
+{{ post.title }} | Blog | Ivo Gioffre
+{% endblock title %}
 
-{% block page_content %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'blog/css/blog.css' %}">
+{% endblock extra_css %}
 
-    <small>
-        {{ post.created_on.date }}
-    </small>
+{% block content %}
 
-    <p>{{ post.body }}</p>
+<section class="blog-detail-section">
+    <div class="container">
 
-    <h3>Comments</h3>
+        <article class="blog-post">
 
-    {% for comment in comments %}
-        <p>
-            <strong>{{ comment.author }}</strong>
-        </p>
-        <p>{{ comment.body }}</p>
-    {% empty %}
-        <p>No comments yet.</p>
-    {% endfor %}
+            {% if post.image %}
+                <div class="blog-post-image-wrap">
+                    <img
+                        src="{{ post.image.url }}"
+                        alt="{{ post.title }}"
+                        class="blog-post-image"
+                    >
+                </div>
+            {% endif %}
 
-    <h3>Leave a comment</h3>
+            <div class="blog-post-content">
 
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Submit</button>
-    </form>
+                <p class="blog-date">
+                    {{ post.created_on|date:"d/m/Y" }}
+                </p>
 
-{% endblock page_content %}
+                <h1 class="blog-post-title">
+                    {{ post.title }}
+                </h1>
+
+                <div class="blog-categories">
+                    {% for category in post.categories.all %}
+                        <a href="{% url 'blog_category' category.name %}">
+                            {{ category.name }}
+                        </a>
+                    {% endfor %}
+                </div>
+
+                <div class="blog-post-body">
+                    {{ post.body|linebreaks }}
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <section class="blog-comments">
+
+            <p class="section-eyebrow">Participación</p>
+            <h2 class="section-title">Comentarios</h2>
+
+            <div class="comments-list">
+
+                {% for comment in comments %}
+
+                    <article class="comment-card">
+
+                        <div class="comment-header">
+                            <strong>{{ comment.author }}</strong>
+                            <span>
+                                {{ comment.created_on|date:"d/m/Y H:i" }}
+                            </span>
+                        </div>
+
+                        <p class="comment-body">
+                            {{ comment.body }}
+                        </p>
+
+                    </article>
+
+                {% empty %}
+
+                    <p class="comments-empty">
+                        Todavía no hay comentarios. Sé el primero en comentar.
+                    </p>
+
+                {% endfor %}
+
+            </div>
+
+
+            <div class="comment-form-container">
+
+                <p class="section-eyebrow">Tu opinión</p>
+                <h3>Dejá un comentario</h3>
+
+                <form method="post" class="comment-form">
+
+                    {% csrf_token %}
+
+                    <div class="comment-field">
+                        <label for="{{ form.author.id_for_label }}">
+                            Nombre
+                        </label>
+                        {{ form.author }}
+                    </div>
+
+                    <div class="comment-field">
+                        <label for="{{ form.body.id_for_label }}">
+                            Comentario
+                        </label>
+                        {{ form.body }}
+                    </div>
+
+                    <button type="submit" class="btn-neon-solid">
+                        Publicar comentario
+                        <i class="fa-solid fa-paper-plane ms-2"></i>
+                    </button>
+
+                </form>
+
+            </div>
+
+        </section>
+
+    </div>
+</section>
+
+{% endblock content %}
