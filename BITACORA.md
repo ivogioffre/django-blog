@@ -30,6 +30,36 @@ Y si este no se llena la descripcion se autorellena con las primeras 30 palabras
 
 return self.summary or Truncator(self.body).words(30)
 
+8/10 
+Se solucionan problemas de distribucion de elementos ya que la distribucion de las tarjetas cambiaba segun el monitor (4 columnas en uno, 3 y 2 en otro) y en las categorias con pocos posts quedaban pegadas a la izquierda. Lo resolvi pasando de grid auto-fit a un contenedor flex con wrap y justify-content: center, con ancho fijo por tarjeta (3 columnas en escritorio, 2 en tablet, 1 en celular):
+
+.blog-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.blog-card {
+  flex: 0 1 calc((100% - 4rem) / 3);
+  min-width: 0;
+}
+
+@media (max-width: 991px) {
+  .blog-card {
+    flex-basis: calc((100% - 2rem) / 2);
+  }
+}
+
+@media (max-width: 640px) {
+  .blog-card {
+    flex-basis: 100%;
+  }
+}
+
+Admemas se arma el README.MD en el cual se encuentra una vision general del proyecto y sus caracteristicas como su estructura 
+
+Por cuestion de tiempo me quedo pendiente el registro de usuarios para comentar que era un aspecto que queria implementar, pero en general y a pesar de algunos errores en el camino, el desarrollo del proyecto fue avanzando correctamente a lo largo del tiempo
 
 
 

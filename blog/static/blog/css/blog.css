@@ -21,22 +21,27 @@
 /* Tarjetas */
 
 .blog-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 2rem;
 }
 
 .blog-card {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius);
-  transition:
-    transform var(--transition-fast),
-    border-color var(--transition-fast),
-    box-shadow var(--transition-fast);
+  flex: 0 1 calc((100% - 4rem) / 3);
+  min-width: 0;
+}
+
+@media (max-width: 991px) {
+  .blog-card {
+    flex-basis: calc((100% - 2rem) / 2);
+  }
+}
+
+@media (max-width: 640px) {
+  .blog-card {
+    flex-basis: 100%;
+  }
 }
 
 .blog-card:hover {
