@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.utils.text import Truncator
 
 class Category(models.Model):
     name = models.CharField(max_length=30)
@@ -13,11 +13,16 @@ class Category(models.Model):
 
 class Post(models.Model):
     title = models.CharField(max_length=255)
+    summary = models.CharField(max_length=200, blank=True)
     body = models.TextField()
     image = models.ImageField(upload_to="posts/", blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
     categories = models.ManyToManyField("Category", related_name="posts")
+
+    @property
+    def excerpt(self):
+        return self.summary or Truncator(self.body).words(30) #si se deja vacio se usan las primeras 30 palabras del texto
 
     class Meta:
         ordering = ["-created_on"]
